@@ -2,7 +2,6 @@ package main
 
 import (
 	"ecommerce/config"
-	"ecommerce/database"
 	"ecommerce/routes"
 	"fmt"
 
@@ -10,9 +9,9 @@ import (
 )
 
 func init() {
-	database.Connection()
+	// database.Connection()
 
-	fmt.Println("server listening on", config.PORT)
+	fmt.Println("============================== server listening on", config.PORT, "=============================")
 }
 
 func main() {

@@ -6,7 +6,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var MONGODB_URI, PORT, GIN_MODE string
+var MONGODB_URI, PORT, GIN_MODE, JWT_SECRET string
 
 func init() {
 
@@ -20,5 +20,6 @@ func init() {
 	MONGODB_URI = envs["MONGODB_URI"]
 	PORT = envs["PORT"]
 	GIN_MODE = envs["GIN_MODE"]
+	JWT_SECRET = envs["JWT_SECRET"]
 
 }

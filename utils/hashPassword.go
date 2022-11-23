@@ -1,27 +1,25 @@
 package utils
 
 import (
-	"ecommerce/response"
-
-	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashPassword(c *gin.Context, password string) string {
+func HashPassword(password string) (string, string) {
 	byte, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	if err != nil {
-		response.SendErrorResponse(c, 500, err.Error())
+		return string(byte), err.Error()
 	}
-	return string(byte)
+	return string(byte), ""
 }
 
-func VerifyPassword(c *gin.Context, givenPassword string, userPassword string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(givenPassword), []byte(userPassword))
-	valid := true
+func VerifyPassword(userPassword string, givenPassword string) (bool, string) {
+	// first is hash password and second parameter is password
+
+	err := bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(givenPassword))
+
 	if err != nil {
-		valid = false
-		response.SendErrorResponse(c, 500, err.Error())
+		return false, err.Error()
 	}
-	return valid
+	return true, ""
 
 }
