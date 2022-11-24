@@ -14,13 +14,18 @@ type ErrorResponse struct {
 	TimeStamp time.Time `json:"time_stamp"`
 }
 
+func (errorResponse *ErrorResponse) defaultValues() {
+	errorResponse.Success = false
+	errorResponse.TimeStamp = time.Now()
+}
+
 func SendErrorResponse(c *gin.Context, status int, message string) {
+
 	errorData := ErrorResponse{
-		Status:    status,
-		Success:   false,
-		Message:   message,
-		TimeStamp: time.Now(),
+		Status:  status,
+		Message: message,
 	}
+	errorData.defaultValues()
 
 	switch status {
 	case 400:

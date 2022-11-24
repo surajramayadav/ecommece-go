@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"ecommerce/response"
 	"ecommerce/services"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,35 +9,41 @@ import (
 func Register() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		services.UserRegistartion(c)
+		return
 	}
 }
 
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		services.UserLogin(c)
+		return
 	}
 }
 
 func ViewUserById() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": true, "message": "user view by id successfully"})
+		services.ViewUserById(c)
+		return
 	}
 }
 
 func ViewUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		response.SendSuccessResponse(c, 200, "user data successfully")
+		services.ViewUser(c)
+		return
 	}
 }
 
 func UpdateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": true, "message": "user update successfully"})
+		services.UpdateUser(c)
+		return
 	}
 }
 
 func DeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": true, "message": "user delete successfully"})
+		services.DeleteUser(c)
+		return
 	}
 }
