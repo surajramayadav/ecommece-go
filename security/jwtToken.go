@@ -14,6 +14,7 @@ type TokenWithDetails struct {
 	Name  string
 	Phone string
 	Email string
+	Role  string
 	jwt.StandardClaims
 }
 
@@ -23,6 +24,7 @@ func CreateJwtToken(user models.User) (string, string) {
 		Name:  user.Name,
 		Phone: user.Phone,
 		Email: user.Email,
+		Role:  user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
@@ -34,4 +36,26 @@ func CreateJwtToken(user models.User) (string, string) {
 	}
 
 	return token, ""
+}
+
+func ValidateJwtToken(signedtoken string) (claims *TokenWithDetails, msg string) {
+
+	jwtToken, err := jwt.ParseWithClaims(signedtoken, &TokenWithDetails{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.JWT_SECRET), nil
+	})
+
+	if err != nil {
+		msg = err.Error()
+		return
+	}
+	claims, ok := jwtToken.Claims.(*TokenWithDetails)
+	if !ok {
+		msg = "The Token is invalid"
+		return
+	}
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		msg = "token is expired"
+		return
+	}
+	return claims, msg
 }

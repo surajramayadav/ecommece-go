@@ -2,6 +2,7 @@ package main
 
 import (
 	"ecommerce/config"
+	"ecommerce/middlewares"
 	"ecommerce/routes"
 	"fmt"
 
@@ -16,6 +17,7 @@ func init() {
 
 func main() {
 	router := gin.Default()
+	router.Use(middlewares.CustomMiddleware)
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Working....",
