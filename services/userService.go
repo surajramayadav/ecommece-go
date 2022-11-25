@@ -11,12 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
 )
 
-var validate = validator.New()
+var Validate = validator.New()
 
 var userCollection *mongo.Collection = database.OpenCollection(database.Client, "users")
 
@@ -31,16 +30,20 @@ func UserRegistartion(c *gin.Context) {
 	var singleUser *models.User
 	var catchErr string
 
+	// bind req.body to user struct
 	if err := c.BindJSON(&singleUser); err != nil {
 		response.SendErrorResponse(c, 500, err.Error())
 		return
 	}
 
-	validatorErr := validate.Struct(singleUser)
+	// validate user struct
+	validatorErr := Validate.Struct(singleUser)
 	if validatorErr != nil {
 		response.SendErrorResponse(c, 400, validatorErr.Error())
 		return
 	}
+
+	// Chceking user already exists or not
 	count, err := userCollection.CountDocuments(context.TODO(), bson.M{"email": singleUser.Email})
 	if err != nil {
 		fmt.Println(err)
@@ -53,21 +56,25 @@ func UserRegistartion(c *gin.Context) {
 		return
 	}
 
+	// convert normal password to hash password
 	singleUser.Password, catchErr = utils.HashPassword(singleUser.Password)
 	if catchErr != "" {
 		response.SendErrorResponse(c, 400, catchErr)
 		return
 	}
+	// save user in db
 	result, err := userCollection.InsertOne(context.TODO(), singleUser)
 	if err != nil {
 		response.SendErrorResponse(c, 400, err.Error())
 		return
 	}
+	// checking if user is save or not in db
 	if result.InsertedID == "" {
 		response.SendErrorResponse(c, 500, "something went wrong!!!")
 		return
 	}
 
+	// get user from db
 	if err := userCollection.FindOne(context.TODO(), bson.M{"_id": result.InsertedID}).Decode(&singleUser); err != nil {
 		response.SendErrorResponse(c, 500, err.Error())
 		return
@@ -83,30 +90,38 @@ func UserLogin(c *gin.Context) {
 	var userLogin LoginUserStruct
 	var singleUser models.User
 
+	// bind req.body to user struct
 	if err := c.BindJSON(&userLogin); err != nil {
 		response.SendErrorResponse(c, 500, err.Error())
 		return
 	}
-	validatorErr := validate.Struct(userLogin)
+
+	// validate user struct
+	validatorErr := Validate.Struct(userLogin)
 	if validatorErr != nil {
 		response.SendErrorResponse(c, 400, validatorErr.Error())
 		return
 	}
+
+	// chceking email or passwprd is null or not
 	if userLogin.Email == "" && userLogin.Password == "" {
 		response.SendErrorResponse(c, 400, "Email and Password cannot be empty")
 		return
 	}
 
+	// get data from db using email
 	if err := userCollection.FindOne(context.TODO(), bson.M{"email": userLogin.Email}).Decode(&singleUser); err != nil {
 		fmt.Println(err.Error())
 		response.SendErrorResponse(c, 400, "Email and Password is incorrect")
 		return
 	}
+
 	if singleUser.Email == "" && singleUser.Password == "" {
 		response.SendErrorResponse(c, 400, "Email and Password is incorrect")
 		return
 	}
 
+	// convert hash password to normal password getting a flag true of flase
 	flag, err := utils.VerifyPassword(singleUser.Password, userLogin.Password)
 	if err != "" {
 		response.SendErrorResponse(c, 400, "Email and Password is incorrect")
@@ -118,6 +133,7 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 
+	// create jwt added email name etc
 	jwtToken, err := security.CreateJwtToken(singleUser)
 
 	if err != "" {
@@ -135,19 +151,17 @@ func ViewUserById(c *gin.Context) {
 	var user []models.User
 	var singleUser models.User
 
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		response.SendErrorResponse(c, 400, "user id is invalid")
-		return
-	}
-	if id == primitive.NilObjectID {
-		response.SendErrorResponse(c, 400, "user id is empty")
+	// conver id to objectId
+	id, e := utils.ConverIntoObject(c.Param("id"))
+	if e != "" {
+		response.SendErrorResponse(c, 400, e)
 		return
 	}
 
+	// get data from db
 	if err := userCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&singleUser); err != nil {
 		fmt.Println(err.Error())
-		response.SendErrorResponse(c, 400, "user not found")
+		response.SendErrorResponse(c, 400, "user is not found")
 		return
 	}
 	user = append(user, singleUser)
@@ -185,13 +199,10 @@ func UpdateUser(c *gin.Context) {
 	if err := c.BindJSON(&singleUser); err != nil {
 		response.SendErrorResponse(c, 500, err.Error())
 	}
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		response.SendErrorResponse(c, 400, "user id is invalid")
-		return
-	}
-	if id == primitive.NilObjectID {
-		response.SendErrorResponse(c, 400, "user id is empty")
+
+	id, e := utils.ConverIntoObject(c.Param("id"))
+	if e != "" {
+		response.SendErrorResponse(c, 400, e)
 		return
 	}
 
@@ -203,7 +214,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	if count == 0 {
-		response.SendErrorResponse(c, 400, "user not found")
+		response.SendErrorResponse(c, 400, "user is not found")
 		return
 	}
 
@@ -226,18 +237,10 @@ func UpdateUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	var user []models.User
-	var singleUser models.User
 
-	if err := c.BindJSON(&singleUser); err != nil {
-		response.SendErrorResponse(c, 500, err.Error())
-	}
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		response.SendErrorResponse(c, 400, "user id is invalid")
-		return
-	}
-	if id == primitive.NilObjectID {
-		response.SendErrorResponse(c, 400, "user id is empty")
+	id, e := utils.ConverIntoObject(c.Param("id"))
+	if e != "" {
+		response.SendErrorResponse(c, 400, e)
 		return
 	}
 

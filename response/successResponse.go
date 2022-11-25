@@ -1,30 +1,25 @@
 package response
 
 import (
-	"ecommerce/models"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-type ResponseData struct {
-	Data []models.User `json:"data"`
-}
-
 type SuccessResponse struct {
-	Status    int           `json:"status"`
-	Success   bool          `json:"success"`
-	Data      []models.User `json:"data"`
-	TimeStamp string        `json:"time_stamp"`
+	Status    int    `json:"status"`
+	Success   bool   `json:"success"`
+	Data      any    `json:"data"`
+	TimeStamp string `json:"time_stamp"`
 }
 
 type SuccessResponseWithToken struct {
-	Status    int           `json:"status"`
-	Success   bool          `json:"success"`
-	Data      []models.User `json:"data"`
-	Token     string        `json:"token"`
-	TimeStamp string        `json:"time_stamp"`
+	Status    int    `json:"status"`
+	Success   bool   `json:"success"`
+	Data      any    `json:"data"`
+	Token     string `json:"token"`
+	TimeStamp string `json:"time_stamp"`
 }
 
 type SuccessResponseWithMessage struct {
@@ -34,7 +29,7 @@ type SuccessResponseWithMessage struct {
 	TimeStamp string `json:"time_stamp"`
 }
 
-func SendSuccessResponse(c *gin.Context, status int, data []models.User, opts ...string) {
+func SendSuccessResponse(c *gin.Context, status int, data any, opts ...string) {
 
 	var successRes any
 

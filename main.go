@@ -22,5 +22,7 @@ func main() {
 		})
 	})
 	routes.UserRoute(router)
+	routes.ProductRoute(router)
+	routes.OrderRoute(router)
 	router.Run(":" + config.PORT)
 }
