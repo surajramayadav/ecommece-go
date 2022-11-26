@@ -3,21 +3,25 @@ package middlewares
 import (
 	"ecommerce/response"
 	"ecommerce/security"
+	"fmt"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func AuthenticationMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ClientToken := c.Request.Header.Get("token")
-		if ClientToken != "" {
+		ClientToken := strings.ReplaceAll(c.Request.Header.Get("Authorization"), "Bearer ", "")
+
+		fmt.Println(ClientToken)
+		if ClientToken == "" {
 			response.SendErrorResponse(c, 401, "No Authorization Header Provided")
 			c.Abort()
 			return
 		}
 		claims, err := security.ValidateJwtToken(ClientToken)
 		if err != "" {
-			response.SendErrorResponse(c, 400, err)
+			response.SendErrorResponse(c, 401, err)
 			c.Abort()
 			return
 		}
@@ -27,5 +31,23 @@ func AuthenticationMiddleware() gin.HandlerFunc {
 		c.Set("role", claims.Role)
 		c.Set("phone", claims.Phone)
 		c.Next()
+	}
+}
+
+func AuthorizationMiddleware(action string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, err := c.Get("role")
+		if err == false {
+			response.SendErrorResponse(c, 401, "No Authorization Header Provided")
+			c.Abort()
+			return
+		}
+		if role == action {
+			c.Next()
+		} else {
+			response.SendErrorResponse(c, 401, "Not Authorized to Perform this operation")
+			c.Abort()
+			return
+		}
 	}
 }

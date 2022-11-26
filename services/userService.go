@@ -35,7 +35,9 @@ func UserRegistartion(c *gin.Context) {
 		response.SendErrorResponse(c, 500, err.Error())
 		return
 	}
-
+	if singleUser.Role == "" {
+		singleUser.Role = "user"
+	}
 	// validate user struct
 	validatorErr := Validate.Struct(singleUser)
 	if validatorErr != nil {
@@ -151,13 +153,11 @@ func ViewUserById(c *gin.Context) {
 	var user []models.User
 	var singleUser models.User
 
-	// conver id to objectId
-	id, e := utils.ConverIntoObject(c.Param("id"))
-	if e != "" {
-		response.SendErrorResponse(c, 400, e)
+	id, e := c.Get("id")
+	if e == false {
+		response.SendErrorResponse(c, 401, "No Authorization Header Provided")
 		return
 	}
-
 	// get data from db
 	if err := userCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&singleUser); err != nil {
 		fmt.Println(err.Error())
@@ -200,9 +200,9 @@ func UpdateUser(c *gin.Context) {
 		response.SendErrorResponse(c, 500, err.Error())
 	}
 
-	id, e := utils.ConverIntoObject(c.Param("id"))
-	if e != "" {
-		response.SendErrorResponse(c, 400, e)
+	id, e := c.Get("id")
+	if e == false {
+		response.SendErrorResponse(c, 401, "No Authorization Header Provided")
 		return
 	}
 
