@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// AuthenticationMiddleware is middleware it check user is login or not
+// AuthorizationMiddleware('role') is middleware it check user is role to access resources
+
 func OrderRoute(router *gin.Engine) {
 
 	router.POST("api/v1/order/add", middlewares.AuthenticationMiddleware(), controllers.AddOrder())

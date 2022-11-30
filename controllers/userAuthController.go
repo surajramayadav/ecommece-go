@@ -6,37 +6,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddUser() gin.HandlerFunc {
+func UserRegister() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		services.UserRegistartion(c)
 		return
 	}
 }
 
-func ViewUserById() gin.HandlerFunc {
+func UserLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.ViewUserById(c)
+		services.UserLogin(c)
 		return
 	}
 }
 
-func ViewUser() gin.HandlerFunc {
+func UserForgetPassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.ViewUser(c)
+		services.UserForgetPassword(c)
 		return
 	}
 }
 
-func UpdateUser() gin.HandlerFunc {
+func UserResetPassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.UpdateUser(c)
+		services.UserResetPassword(c)
 		return
 	}
 }
 
-func DeleteUser() gin.HandlerFunc {
+func UserLogout() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.DeleteUser(c)
+		services.UserLogout(c)
 		return
 	}
 }
