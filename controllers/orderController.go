@@ -6,37 +6,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddUser() gin.HandlerFunc {
+func AddOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.UserRegistartion(c)
+		services.AddOrder(c)
 		return
 	}
 }
 
-func ViewUserById() gin.HandlerFunc {
+func ViewOrderById() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.ViewUserById(c)
+		services.ViewOrderById(c)
 		return
 	}
 }
 
-func ViewUser() gin.HandlerFunc {
+func ViewOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.ViewUser(c)
+		services.ViewOrder(c)
 		return
 	}
 }
 
-func UpdateUser() gin.HandlerFunc {
+func UpdateOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.UpdateUser(c)
+		services.UpdateOrder(c)
 		return
 	}
 }
 
-func DeleteUser() gin.HandlerFunc {
+func DeleteOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.DeleteUser(c)
+		services.DeleteOrder(c)
 		return
 	}
 }

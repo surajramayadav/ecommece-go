@@ -1,8 +1,8 @@
 package security
 
 import (
-	"instant/config"
-	"instant/models"
+	"ecommerce/config"
+	"ecommerce/models"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -22,7 +22,7 @@ func CreateJwtToken(user models.User) (string, string) {
 	claims := &TokenWithDetails{
 		Id:    user.Id,
 		Name:  user.Name,
-		Phone: user.Phone_Number,
+		Phone: user.Phone,
 		Email: user.Email,
 		Role:  user.Role,
 		StandardClaims: jwt.StandardClaims{
