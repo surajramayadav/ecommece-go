@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"ecommerce/response"
+	"instant/response"
 
 	"github.com/gin-gonic/gin"
 )

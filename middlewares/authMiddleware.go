@@ -1,9 +1,9 @@
 package middlewares
 
 import (
-	"ecommerce/response"
-	"ecommerce/security"
 	"fmt"
+	"instant/response"
+	"instant/security"
 	"strings"
 
 	"github.com/gin-gonic/gin"

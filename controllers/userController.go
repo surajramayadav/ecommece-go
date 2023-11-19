@@ -1,42 +1,35 @@
 package controllers
 
 import (
-	"ecommerce/services"
+	"instant/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AddUser() gin.HandlerFunc {
+func UpdateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.UserRegistartion(c)
+		services.UserService(c)
 		return
 	}
 }
 
-func ViewUserById() gin.HandlerFunc {
+func GetCurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.ViewUserById(c)
+		services.GetUserByPhoneNumber(c)
 		return
 	}
 }
 
 func ViewUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.ViewUser(c)
+		services.ViewAllUsers(c)
 		return
 	}
 }
 
-func UpdateUser() gin.HandlerFunc {
+func UploadPhoto() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		services.UpdateUser(c)
-		return
-	}
-}
-
-func DeleteUser() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		services.DeleteUser(c)
+		services.UserPhotoService(c)
 		return
 	}
 }

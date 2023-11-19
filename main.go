@@ -1,10 +1,10 @@
 package main
 
 import (
-	"ecommerce/config"
-	"ecommerce/middlewares"
-	"ecommerce/routes"
 	"fmt"
+	"instant/config"
+	"instant/middlewares"
+	"instant/routes"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
@@ -28,6 +28,7 @@ func main() {
 	defer log.Close()
 
 	log.LOGGER("Test").Info("Server Started ...")
+	println("test================================================================")
 
 	router.Use(static.Serve("/images/", static.LocalFile("./uploads", false)))
 
@@ -39,8 +40,6 @@ func main() {
 
 	routes.UserAuthRoute(router)
 	routes.UserRoute(router)
-	routes.ProductRoute(router)
-	routes.OrderRoute(router)
 
 	router.Run(":" + config.PORT)
 }

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"ecommerce/controllers"
+	"instant/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,9 +11,6 @@ import (
 
 func UserAuthRoute(router *gin.Engine) {
 
-	router.POST("api/v1/user/auth/register", controllers.UserRegister())
-	router.POST("api/v1/user/auth/login", controllers.UserLogin())
-	router.GET("api/v1/user/auth/forget-password", controllers.UserForgetPassword())
-	router.GET("api/v1/user/auth/reset-password", controllers.UserResetPassword())
-	router.PUT("api/v1/user/auth/logout", controllers.UserLogout())
+	router.POST("api/v1/user/auth", controllers.Auth())
+
 }

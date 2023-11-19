@@ -54,5 +54,5 @@ func StatusUnauthorized(c *gin.Context, data ErrorResponse) {
 }
 
 func StatusInternalServerError(c *gin.Context, data ErrorResponse) {
-	c.JSON(http.StatusInternalServerError, data) // 500
+	c.JSON(http.StatusInternalServerError, data) //500
 }

@@ -22,6 +22,14 @@ type SuccessResponseWithToken struct {
 	TimeStamp string `json:"time_stamp"`
 }
 
+type SuccessResponseWithMessageAndData struct {
+	Status    int    `json:"status"`
+	Success   bool   `json:"success"`
+	Data      any    `json:"data"`
+	Message   string `json:"message"`
+	TimeStamp string `json:"time_stamp"`
+}
+
 type SuccessResponseWithMessage struct {
 	Status    int    `json:"status"`
 	Success   bool   `json:"success"`
@@ -52,6 +60,14 @@ func SendSuccessResponse(c *gin.Context, status int, data any, opts ...string) {
 			successRes = SuccessResponseWithMessage{
 				Status:    status,
 				Success:   true,
+				Message:   string(opts[1]),
+				TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
+			}
+		case "message-with-data":
+			successRes = SuccessResponseWithMessageAndData{
+				Status:    status,
+				Success:   true,
+				Data:      data,
 				Message:   string(opts[1]),
 				TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 			}

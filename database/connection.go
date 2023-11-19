@@ -2,8 +2,8 @@ package database
 
 import (
 	"context"
-	"ecommerce/config"
 	"fmt"
+	"instant/config"
 	"log"
 	"time"
 
@@ -42,7 +42,7 @@ var Client *mongo.Client = Connection()
 // OpenCollection is a  function makes a connection with a collection in the database
 func OpenCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 
-	var collection *mongo.Collection = client.Database("ecommerce").Collection(collectionName)
+	var collection *mongo.Collection = client.Database("instant").Collection(collectionName)
 
 	return collection
 }

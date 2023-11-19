@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"ecommerce/controllers"
+	"instant/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,9 +11,8 @@ import (
 
 func UserRoute(router *gin.Engine) {
 
-	router.POST("api/v1/user/add", controllers.AddUser())
-	router.GET("api/v1/user/view", controllers.ViewUser())
-	router.GET("api/v1/user/view/:id", controllers.ViewUserById())
-	router.PUT("api/v1/user/:id", controllers.UpdateUser())
-	router.DELETE("api/v1/user/:id", controllers.DeleteUser())
+	router.PUT("api/v1/user", controllers.UpdateUser())
+	router.GET("api/v1/user/:phone_number", controllers.GetCurrentUser())
+	router.GET("api/v1/user", controllers.ViewUser())
+	router.POST("api/v1/user/photo/:phone_number", controllers.UploadPhoto())
 }
